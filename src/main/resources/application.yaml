@@ -10,3 +10,9 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
