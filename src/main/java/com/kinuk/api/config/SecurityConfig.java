@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                             authorize
                                     .requestMatchers("/v3/**", "/swagger-ui/**").permitAll() // Swagger Auth 제외 설정
+                                    .requestMatchers("/api/**").permitAll() // Api
                                     .anyRequest().authenticated(); // 이외의 요청은 Jwt 토큰 검증 필요
                         }
                 );
