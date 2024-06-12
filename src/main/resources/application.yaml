@@ -1,6 +1,8 @@
 spring:
   application:
     name: api
+  profiles:
+    include: info
   datasource:
     url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres
     username: ${DB_USERNAME}
