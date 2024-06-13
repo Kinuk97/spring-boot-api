@@ -12,9 +12,13 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
+  jwt:
+    key: ${JWT_KEY}
 server:
   servlet:
     encoding:
       charset: UTF-8
       force: true
       enabled: true
+springdoc:
+  use-fqn: true
