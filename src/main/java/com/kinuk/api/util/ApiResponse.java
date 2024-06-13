@@ -1,5 +1,6 @@
 package com.kinuk.api.util;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,8 +12,10 @@ public class ApiResponse<T> {
     private static final String RESULT_FAIL = "fail";
     private static final String RESULT_ERROR = "error";
 
+    @Schema(description = "결과 코드", example = RESULT_OK)
     private String result;
     private T data;
+    @Schema(description = "메세지")
     private String message;
 
     public static ApiResponse<?> ok() {
