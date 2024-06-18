@@ -2,11 +2,13 @@ package com.kinuk.api.service;
 
 import com.kinuk.api.dto.LoginDto;
 import com.kinuk.api.dto.SignupDto;
+import com.kinuk.api.dto.UserUpdateDto;
 import com.kinuk.api.entity.UserEntity;
 import com.kinuk.api.entity.UserRepository;
 import com.kinuk.api.exception.ApiException;
 import com.kinuk.api.exception.ApiResponseCode;
 import com.kinuk.api.util.JwtUtil;
+import com.kinuk.api.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,5 +62,25 @@ public class UserService {
             throw new ApiException(ApiResponseCode.LOGIN_FAILED);
         }
     }
+
+    /**
+     * 회원 정보 수정
+     *
+     * @param request - 수정할 비밀번호, 이름 (비어있는 경우 수정 X)
+     */
+    public void update(UserUpdateDto.Request request) {
+        UserEntity userEntity = userRepository.findById(request.getUserId()).orElseThrow(() -> new ApiException(ApiResponseCode.USER_NOT_FOUND));
+
+        if (!request.getPassword().isEmpty()) {
+            userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        }
+
+        if (!request.getName().isEmpty()) {
+            userEntity.setName(request.getName());
+        }
+
+        userRepository.save(userEntity);
+    }
+
 
 }
