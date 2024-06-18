@@ -14,6 +14,7 @@ public enum ApiResponseCode {
     // User
     ALREADY_EXISTS_USER(HttpStatus.OK, "이미 가입된 사용자입니다."),
     LOGIN_FAILED(HttpStatus.OK, "ID 혹은 비밀번호를 잘못 입력하셨거나 등록되지 않은 ID 입니다."),
+    USER_NOT_FOUND(HttpStatus.OK, "등록된 회원이 아닙니다."),
 
     // Jwt Token
     INVALID_TOKEN(HttpStatus.OK, "유효하지 않은 토큰입니다."),

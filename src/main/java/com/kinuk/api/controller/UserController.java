@@ -2,6 +2,7 @@ package com.kinuk.api.controller;
 
 import com.kinuk.api.dto.LoginDto;
 import com.kinuk.api.dto.SignupDto;
+import com.kinuk.api.dto.UserUpdateDto;
 import com.kinuk.api.service.UserService;
 import com.kinuk.api.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,6 +48,20 @@ public class UserController {
         String token = userService.login(request);
 
         return ApiResponse.ok(LoginDto.Response.builder().token(token).build());
+    }
+
+    /**
+     * 회원정보 수정 API
+     *
+     * @param request - 수정 회원 정보
+     * @return ApiResponse - 수정 결과
+     */
+    @Operation(summary = "정보 수정")
+    @PostMapping("update")
+    public ApiResponse<?> update(@RequestBody @Valid UserUpdateDto.Request request) {
+        userService.update(request);
+
+        return ApiResponse.ok();
     }
 
 }
