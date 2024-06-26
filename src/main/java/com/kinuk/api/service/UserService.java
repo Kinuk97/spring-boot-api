@@ -69,8 +69,10 @@ public class UserService {
      * @param request - 수정할 비밀번호, 이름 (비어있는 경우 수정 X)
      */
     public void update(UserUpdateDto.Request request) {
-        UserEntity userEntity = userRepository.findById(request.getUserId()).orElseThrow(() -> new ApiException(ApiResponseCode.USER_NOT_FOUND));
+        // 받은 토큰의 userId로 유저 확인
+        UserEntity userEntity = userRepository.findById(SecurityUtil.getUserId()).orElseThrow(() -> new ApiException(ApiResponseCode.USER_NOT_FOUND));
 
+        // 수정할 데이터가 있는 경우에만 데이터 수정
         if (!request.getPassword().isEmpty()) {
             userEntity.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         }
@@ -82,5 +84,13 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-
+    /**
+     * 해당 유저가 존재하는지 확인
+     *
+     * @param userId - 확인할 ID
+     * @return boolean - 있다면 true, 없다면 false
+     */
+    public boolean checkUserId(String userId) {
+        return userRepository.existsById(userId);
+    }
 }

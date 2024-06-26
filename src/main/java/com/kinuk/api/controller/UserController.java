@@ -6,6 +6,7 @@ import com.kinuk.api.dto.UserUpdateDto;
 import com.kinuk.api.service.UserService;
 import com.kinuk.api.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,7 @@ public class UserController {
      * @return ApiResponse - 수정 결과
      */
     @Operation(summary = "정보 수정")
+    @SecurityRequirement(name = "Authorization")
     @PostMapping("update")
     public ApiResponse<?> update(@RequestBody @Valid UserUpdateDto.Request request) {
         userService.update(request);
