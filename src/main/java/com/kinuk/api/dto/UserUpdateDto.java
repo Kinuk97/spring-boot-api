@@ -7,9 +7,6 @@ public class UserUpdateDto {
 
     @Data
     public static class Request {
-        @Schema(description = "사용자 아이디")
-        private String userId;
-
         @Schema(description = "수정할 사용자 비밀번호", defaultValue = "123456")
         private String password;
 

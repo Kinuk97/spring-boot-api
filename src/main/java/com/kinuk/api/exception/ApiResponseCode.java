@@ -17,6 +17,7 @@ public enum ApiResponseCode {
     USER_NOT_FOUND(HttpStatus.OK, "등록된 회원이 아닙니다."),
 
     // Jwt Token
+    NO_TOKEN(HttpStatus.OK, "Authorization 토큰이 필요합니다."),
     INVALID_TOKEN(HttpStatus.OK, "유효하지 않은 토큰입니다."),
     EXPIRED_TOKEN(HttpStatus.OK, "만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(HttpStatus.OK, "지원하지 않는 토큰입니다."),
