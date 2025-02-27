@@ -1,6 +1,5 @@
 package com.kinuk.api.filter;
 
-import com.kinuk.api.exception.ApiException;
 import com.kinuk.api.exception.ApiResponseCode;
 import com.kinuk.api.service.UserService;
 import com.kinuk.api.util.JwtUtil;
@@ -33,28 +32,29 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
 
-        String userId;
-        String jwtToken = null;
-
         if (authorization != null && authorization.startsWith("Bearer ")) {
-            jwtToken = authorization.substring(7);
-        } else {
-            throw new ApiException(ApiResponseCode.NO_TOKEN);
-        }
+            String jwtToken = authorization.substring(7);
 
-        // 헤더에 토큰이 있고 검증 결과 문제가 없다면
-        if (jwtUtil.validateToken(jwtToken)) {
-            userId = jwtUtil.extractUserId(jwtToken);
+            // 헤더에 토큰이 있고 검증 결과 문제가 없다면
+            ApiResponseCode jwtResult = jwtUtil.validateToken(jwtToken);
+            if (jwtResult == null) {
+                String userId = jwtUtil.extractUserId(jwtToken);
 
-            boolean check = userService.checkUserId(userId);
+                boolean check = userService.checkUserId(userId);
 
-            if (check) {
-                // 인증 성공 후 처리
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userId, "", List.of());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (check) {
+                    // 인증 성공 후 처리
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(userId, "", List.of());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    log.info("Token does not validate [{}]", request.getServletPath());
+                    request.setAttribute("jwt_result", ApiResponseCode.EXCEPTION_TOKEN.getMessage());
+                }
             } else {
-                log.info("Token does not validate [{}]", request.getServletPath());
+                request.setAttribute("jwt_result", jwtResult.getMessage());
             }
+        } else {
+            request.setAttribute("jwt_result", ApiResponseCode.NO_TOKEN.getMessage());
         }
 
         filterChain.doFilter(request, response);

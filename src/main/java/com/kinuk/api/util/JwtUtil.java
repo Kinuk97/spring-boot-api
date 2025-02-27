@@ -1,7 +1,6 @@
 package com.kinuk.api.util;
 
 import com.kinuk.api.exception.ApiResponseCode;
-import com.kinuk.api.exception.JwtTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -59,28 +58,29 @@ public class JwtUtil {
      * 토큰 검증 함수
      *
      * @param token - 발급된 토큰
-     * @return - 검증 완료: true, 검증 실패: false
+     * @return - null || ApiResponseCode
      */
-    public boolean validateToken(String token) {
+    public ApiResponseCode validateToken(String token) {
         try {
             extractClaims(token);
-            return true;
         } catch (SecurityException | MalformedJwtException e) {
             // 유효하지 않은 토큰
-            throw new JwtTokenException(ApiResponseCode.INVALID_TOKEN);
+            return ApiResponseCode.INVALID_TOKEN;
         } catch (ExpiredJwtException e) {
             // 만료된 토큰
-            throw new JwtTokenException(ApiResponseCode.EXPIRED_TOKEN);
+            return ApiResponseCode.EXPIRED_TOKEN;
         } catch (UnsupportedJwtException e) {
             // 지원하지 않는 토큰
-            throw new JwtTokenException(ApiResponseCode.UNSUPPORTED_TOKEN);
+            return ApiResponseCode.UNSUPPORTED_TOKEN;
         } catch (IllegalArgumentException e) {
             // claims 가 정상이 아닌 경우
-            throw new JwtTokenException(ApiResponseCode.EMPTY_TOKEN);
+            return ApiResponseCode.EMPTY_TOKEN;
         } catch (Exception e) {
             log.info("Jwt Token Exception", e);
-            throw new JwtTokenException(ApiResponseCode.EXCEPTION_TOKEN);
+            return ApiResponseCode.EXCEPTION_TOKEN;
         }
+
+        return null;
     }
 
     /**
