@@ -3,8 +3,6 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: api
-  profiles:
-    include: info
   datasource:
     url: jdbc:postgresql://${DB_HOST}/${DB_DATABASE}
     username: ${DB_USERNAME}
