@@ -6,8 +6,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -17,12 +21,36 @@ import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
+
+    /**
+     * Type Not Accept Data
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new ResponseEntity<>(ApiResponse.fail(ex.getMessage()), status);
+    }
+
+    /**
+     * Not Json Data
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new ResponseEntity<>(ApiResponse.fail(ex.getMessage()), status);
+    }
+
+    /**
+     * 400 Bad Request 처리
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new ResponseEntity<>(ApiResponse.fail(ex.getMessage()), status);
+    }
 
     /**
      * ApiException 처리
      */
-    @org.springframework.web.bind.annotation.ExceptionHandler(ApiException.class)
+    @ExceptionHandler(ApiException.class)
     protected ResponseEntity<Object> handleApiException(ApiException ex) {
         logger.info("Api Exception", ex);
         return new ResponseEntity<>(ApiResponse.fail(ex.getApiResponseCode().getMessage()), ex.getApiResponseCode().getHttpStatus());
@@ -42,9 +70,9 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * global exception handler
+     * RestController Global exception handler
      */
-    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ExceptionHandler
     protected ApiResponse<?> handleApiException(Exception ex) {
         logger.error("Global Exception", ex);
         return ApiResponse.error(ex.getMessage());
