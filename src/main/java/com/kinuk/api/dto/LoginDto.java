@@ -10,11 +10,11 @@ public class LoginDto {
     @Data
     public static class Request {
         @NotBlank
-        @Schema(description = "사용자 아이디", defaultValue = "kw68")
+        @Schema(description = "사용자 아이디", example = "kw68")
         private String userId;
 
         @NotBlank
-        @Schema(description = "사용자 비밀번호", defaultValue = "123456")
+        @Schema(description = "사용자 비밀번호", example = "123456")
         private String password;
     }
 

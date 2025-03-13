@@ -10,15 +10,15 @@ public class SignupDto {
     public static class Request {
 
         @NotBlank
-        @Schema(description = "사용자 아이디", defaultValue = "kw68")
+        @Schema(description = "사용자 아이디", example = "kw68")
         private String userId;
 
         @NotBlank
-        @Schema(description = "사용자 비밀번호", defaultValue = "123456")
+        @Schema(description = "사용자 비밀번호", example = "123456")
         private String password;
 
         @NotBlank
-        @Schema(description = "사용자 이름", defaultValue = "관우")
+        @Schema(description = "사용자 이름", example = "관우")
         private String name;
     }
 
