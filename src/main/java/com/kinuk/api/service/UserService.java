@@ -10,6 +10,7 @@ import com.kinuk.api.exception.ApiResponseCode;
 import com.kinuk.api.util.JwtUtil;
 import com.kinuk.api.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +53,9 @@ public class UserService {
      * @param request - 로그인 처리에 필요한 userId, password
      * @return - Jwt 토큰
      */
+    @Cacheable(value = "loginCache", key = "#request.userId")
     public String login(LoginDto.Request request) {
+        System.out.println("run login");
 
         UserEntity userEntity = userRepository.findById(request.getUserId()).orElseThrow(() -> new ApiException(ApiResponseCode.LOGIN_FAILED));
 
